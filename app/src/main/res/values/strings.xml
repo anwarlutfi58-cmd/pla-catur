@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PLA Catur</string>
+    <string name="title">♟️ PLA Catur ♜</string>
+    <string name="tagline">Edisi Klasik Nusantara</string>
+    <string name="play_ai">🤖 Lawan AI</string>
+    <string name="play_local">👥 1 Lawan 1</string>
+    <string name="shop">🛒 Toko</string>
+    <string name="settings">⚙️ Pengaturan</string>
+    <string name="help">❓ Cara Bermain</string>
+    <string name="back">← Kembali</string>
+    <string name="home">🏠 Beranda</string>
+    <string name="level">Level: %1$d</string>
+    <string name="coins">💰 Rp %1$d</string>
+    <string name="wins">🏆 Menang: %1$d</string>
+    <string name="white_turn">Giliran: Putih (Prabu)</string>
+    <string name="black_turn">Giliran: Hitam (Prabu)</string>
+    <string name="check">⚠️ SKAK!</string>
+    <string name="checkmate_win">🎉 SKAK MAT! Kamu Menang!</string>
+    <string name="checkmate_lose">😢 SKAK MAT! Kamu Kalah</string>
+    <string name="stalemate">🤝 Seri (Stalemate)</string>
+    <string name="retry">🔄 Ulangi</string>
+    <string name="main_menu">Menu Utama</string>
+    <string name="difficulty">Pilih Tingkat AI</string>
+    <string name="easy">😊 Mudah</string>
+    <string name="medium">😐 Sedang</string>
+    <string name="hard">😤 Sulit</string>
+    <string name="volume">Volume Audio Spasial</string>
+    <string name="board_size">Ukuran Papan</string>
+    <string name="help_text">1. Ketuk bidak untuk memilih.\n2. Ketuk kotak tujuan untuk melangkah.\n3. Bidak putih jalan duluan.\n4. Aturan standar catur berlaku.\n5. Skak = Raja terancam. Skak Mat = kalah.\n\n🎧 Audio Spasial: Suara langkah terdengar dari kiri/kanan sesuai posisi papan (pakai earphone untuk efek maksimal).\n\n♟️ Nama Bidak Nusantara:\n• Prabu = Raja\n• Patih = Menteri\n• Kubu = Benteng\n• Banteng = Kuda\n• Resi = Gajah\n• Prajurit = Pion</string>
+    <string name="understand">Mengerti</string>
+    <string name="save">Simpan</string>
+    <string name="saved">✅ Tersimpan!</string>
+    <string name="shop_title">🛒 Toko Desain</string>
+    <string name="buy">Beli</string>
+    <string name="owned">Terpakai</string>
+    <string name="equip">Pakai</string>
+</resources>
