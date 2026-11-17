@@ -15,7 +15,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var speech: SpeechHelper
     private lateinit var sound: SpatialSoundHelper
     private lateinit var engine: ChessEngine
-    private lateinit var ai: AiPlayer?
+    private var ai: AiPlayer? = null // Diperbaiki: tidak pakai lateinit
     private lateinit var boardView: ChessBoardView
     private lateinit var txtTurn: TextView
     private lateinit var txtInfo: TextView
