@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark"
+    android:padding="20dp">
+
+    <Button android:id="@+id/btnBack" android:layout_width="wrap_content" android:layout_height="44dp" android:background="@drawable/bg_panel" android:text="@string/back" android:textColor="@color/text" android:textSize="13sp" android:stateListAnimator="@null"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/settings" android:textColor="@color/gold" android:textSize="22sp" android:textStyle="bold" android:gravity="center"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/volume" android:textColor="@color/text"/>
+    <SeekBar android:id="@+id/seekVolume" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/board_size" android:textColor="@color/text"/>
+    <SeekBar android:id="@+id/seekBoard" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100"/>
+
+    <Button android:id="@+id/btnSave" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="30dp" android:background="@drawable/bg_btn_success" android:text="@string/save" android:textColor="#FFFFFF" android:textStyle="bold" android:stateListAnimator="@null"/>
+    <TextView android:id="@+id/txtSaved" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:gravity="center" android:textColor="@color/success" android:textSize="13sp" android:visibility="gone"/>
+</LinearLayout>
