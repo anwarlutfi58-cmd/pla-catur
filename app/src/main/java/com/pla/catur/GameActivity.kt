@@ -15,7 +15,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var speech: SpeechHelper
     private lateinit var sound: SpatialSoundHelper
     private lateinit var engine: ChessEngine
-    private var ai: AiPlayer? = null // Diperbaiki: tidak pakai lateinit
+    private var ai: AiPlayer? = null
     private lateinit var boardView: ChessBoardView
     private lateinit var txtTurn: TextView
     private lateinit var txtInfo: TextView
@@ -50,7 +50,7 @@ class GameActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnHome).setOnClickListener { finish() }
 
         updateTurnText()
-        speech.speak("Permainan catur dimulai. Giliran putih.")
+        announceTurn()
     }
 
     private fun onCellTapped(r: Int, c: Int) {
@@ -62,7 +62,11 @@ class GameActivity : AppCompatActivity() {
             if (p != null && p.isWhite == engine.isWhiteTurn) {
                 engine.selectedRow = r; engine.selectedCol = c
                 boardView.highlightMoves = engine.validMoves(r, c)
-                speech.speak("${p.name()} di ${coord(r,c)}. ${boardView.highlightMoves.size} langkah tersedia.")
+                
+                // Suara saat memilih bidak
+                val pieceColor = if (p.isWhite) "Putih" else "Hitam"
+                speech.speak("$pieceColor, ${p.name()} di ${coord(r,c)}. Pilih kotak tujuan.")
+                
                 sound.playMove(c)
                 boardView.invalidate()
             }
@@ -73,6 +77,7 @@ class GameActivity : AppCompatActivity() {
                 engine.move(engine.selectedRow, engine.selectedCol, r, c)
                 engine.selectedRow = -1; engine.selectedCol = -1
                 boardView.highlightMoves = emptyList()
+                
                 if (captured != null) {
                     sound.playCapture(c)
                     speech.speak("Memakan ${captured.name()} di ${coord(r,c)}")
@@ -81,18 +86,23 @@ class GameActivity : AppCompatActivity() {
                     speech.speak("Melangkah ke ${coord(r,c)}")
                 }
                 boardView.invalidate()
-                checkGameState()
+                
+                // Cek Skak / Skak Mat
+                val gameEnded = checkGameState()
+                if (gameEnded) return
+
                 if (mode == "ai" && !engine.isWhiteTurn) {
                     busy = true
-                    handler.postDelayed({ aiMove() }, 600)
+                    handler.postDelayed({ aiMove() }, 800)
                 } else {
                     updateTurnText()
+                    announceTurn()
                 }
             } else {
                 engine.selectedRow = -1; engine.selectedCol = -1
                 boardView.highlightMoves = emptyList()
                 boardView.invalidate()
-                speech.speak("Dibatalkan")
+                speech.speak("Dibatalkan. Pilih bidak lain.")
             }
         }
     }
@@ -102,25 +112,38 @@ class GameActivity : AppCompatActivity() {
         if (move == null) { busy = false; return }
         val (from, to) = move
         val captured = engine.board[to.first][to.second]
+        val piece = engine.board[from.first][from.second]
+        
         engine.move(from.first, from.second, to.first, to.second)
+        
+        // AI Bicara
+        val action = if (captured != null) "AI memakan ${captured.name()}" else "AI menggeser ${piece?.name()}"
+        speech.speak("$action ke ${coord(to.first, to.second)}")
+        
         if (captured != null) sound.playCapture(to.second) else sound.playMove(to.second)
-        speech.speak("AI melangkah ke ${coord(to.first, to.second)}")
         boardView.invalidate()
+        
         busy = false
-        checkGameState()
+        val gameEnded = checkGameState()
+        if (gameEnded) return
+
         if (mode == "ai" && !engine.isWhiteTurn) {
             busy = true
-            handler.postDelayed({ aiMove() }, 600)
+            handler.postDelayed({ aiMove() }, 800)
         } else {
             updateTurnText()
+            announceTurn()
         }
     }
 
-    private fun checkGameState() {
+    // Fungsi ini mengembalikan true jika permainan berakhir (Skak Mat / Stalemate)
+    private fun checkGameState(): Boolean {
         if (engine.isCheckmate(!engine.isWhiteTurn)) {
             txtStatus.visibility = View.VISIBLE
             txtStatus.text = getString(R.string.checkmate_win)
-            speech.speak("Skak mat. ${if (engine.isWhiteTurn) "Hitam" else "Putih"} menang.")
+            val winner = if (engine.isWhiteTurn) "Hitam" else "Putih"
+            speech.speak("Skak mat! $winner menang. Permainan selesai.")
+            
             val win = (mode == "ai" && !engine.isWhiteTurn) || (mode == "local")
             if (win && mode == "ai") {
                 prefs.edit().apply {
@@ -132,23 +155,27 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             showResult(true)
-            return
+            return true
         }
+        
         if (engine.isStalemate(!engine.isWhiteTurn)) {
             txtStatus.visibility = View.VISIBLE
             txtStatus.text = getString(R.string.stalemate)
-            speech.speak("Seri. Tidak ada langkah tersisa.")
+            speech.speak("Permainan seri. Tidak ada langkah tersisa.")
             showResult(false)
-            return
+            return true
         }
+        
         if (engine.isInCheck(engine.isWhiteTurn)) {
             txtStatus.visibility = View.VISIBLE
             txtStatus.text = getString(R.string.check)
-            speech.speak("Skak!")
+            // TTS Berteriak SKAK!
+            speech.speak("Awas, Skak! Raja dalam bahaya!")
             sound.playCheck(3)
         } else {
             txtStatus.visibility = View.GONE
         }
+        return false
     }
 
     private fun showResult(win: Boolean) {
@@ -167,6 +194,20 @@ class GameActivity : AppCompatActivity() {
         txtTurn.text = if (engine.isWhiteTurn) getString(R.string.white_turn) else getString(R.string.black_turn)
         txtInfo.text = if (engine.isWhiteTurn) "Ketuk bidak putih untuk memilih"
                        else "Ketuk bidak hitam untuk memilih"
+    }
+
+    // Fungsi khusus membacakan giliran
+    private fun announceTurn() {
+        if (mode == "ai") {
+            if (engine.isWhiteTurn) {
+                speech.speak("Sekarang giliran kamu. Jalan bidak putih.")
+            } else {
+                // AI yang jalan, tidak perlu bicara "giliran kamu"
+            }
+        } else {
+            val color = if (engine.isWhiteTurn) "Putih" else "Hitam"
+            speech.speak("Sekarang giliran $color.")
+        }
     }
 
     private fun coord(r: Int, c: Int): String = "${('A' + c)}${8 - r}"
