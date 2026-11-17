@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_dark">#12100E</color>
+    <color name="bg_darker">#0A0907</color>
+    <color name="panel">#1E1A16</color>
+    <color name="primary">#B87333</color>
+    <color name="primary_light">#D4A373</color>
+    <color name="accent">#FFD700</color>
+    <color name="gold">#F5C542</color>
+    <color name="success">#4CAF50</color>
+    <color name="danger">#E57373</color>
+    <color name="text">#F5F0E6</color>
+    <color name="text_soft">#A89F91</color>
+
+    <color name="board_light">#F0D9B5</color>
+    <color name="board_dark">#B58863</color>
+    <color name="board_border">#3E2723</color>
+    <color name="piece_white">#FFFFFF</color>
+    <color name="piece_black">#1A1A1A</color>
+    <color name="highlight">#FFD700</color>
+    <color name="highlight_move">#80FFD700</color>
+    <color name="danger_zone">#80E57373</color>
+</resources>
