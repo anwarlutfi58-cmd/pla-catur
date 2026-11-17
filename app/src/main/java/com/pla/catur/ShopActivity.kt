@@ -19,6 +19,7 @@ class ShopActivity : AppCompatActivity() {
         ShopItem("piece_classic", "Bidak Klasik", 0),
         ShopItem("piece_nusantara", "Bidak Nusantara", 800)
     )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop)
@@ -31,34 +32,40 @@ class ShopActivity : AppCompatActivity() {
     private fun renderShop() {
         val container = findViewById<LinearLayout>(R.id.shopContainer)
         container.removeAllViews()
+        
         val coins = prefs.getInt("coins", 0)
         findViewById<TextView>(R.id.txtCoins).text = "Saldo: Rp $coins"
-        val owned = prefs.getStringSet("owned", setOf("wood_classic", "piece_classic")) ?: emptySet()
+        
+        // Ambil data dari prefs (pastikan tipenya Set<String>)
+        val owned = prefs.getStringSet("owned", setOf("wood_classic", "piece_classic")) ?: setOf("wood_classic", "piece_classic")
         val equipped = prefs.getString("equippedBoard", "wood_classic") ?: "wood_classic"
         
-        for (it in items) {
+        for (item in items) {
             val v = LayoutInflater.from(this).inflate(R.layout.item_shop, container, false)
-            v.findViewById<TextView>(R.id.itemName).text = it.name
-            v.findViewById<TextView>(R.id.itemPrice).text = if (it.price == 0) "Gratis" else "Rp ${it.price}"
+            v.findViewById<TextView>(R.id.itemName).text = item.name
+            v.findViewById<TextView>(R.id.itemPrice).text = if (item.price == 0) "Gratis" else "Rp ${item.price}"
+            
             val btn = v.findViewById<Button>(R.id.itemBtn)
             
             btn.text = when {
-                equipped == it.id -> getString(R.string.owned)
-                owned.contains(it.id) -> getString(R.string.equip)
+                equipped == item.id -> getString(R.string.owned)
+                owned.contains(item.id) -> getString(R.string.equip)
                 else -> getString(R.string.buy)
             }
             
             btn.setOnClickListener {
-                if (equipped == it.id) return@setOnClickListener
-                if (owned.contains(it.id)) {
-                    prefs.edit().putString("equippedBoard", it.id).apply()
+                if (equipped == item.id) return@setOnClickListener
+                if (owned.contains(item.id)) {
+                    // Pakai item
+                    prefs.edit().putString("equippedBoard", item.id).apply()
                     renderShop()
                 } else {
-                    if (coins >= it.price) {
-                        val newCoins = coins - it.price
+                    // Beli item
+                    if (coins >= item.price) {
+                        val newCoins = coins - item.price
                         prefs.edit()
                             .putInt("coins", newCoins)
-                            .putStringSet("owned", owned + it.id)
+                            .putStringSet("owned", owned + item.id)
                             .apply()
                         renderShop()
                     }
