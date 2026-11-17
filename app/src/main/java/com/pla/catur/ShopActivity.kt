@@ -34,17 +34,20 @@ class ShopActivity : AppCompatActivity() {
         val coins = prefs.getInt("coins", 0)
         findViewById<TextView>(R.id.txtCoins).text = "Saldo: Rp $coins"
         val owned = prefs.getStringSet("owned", setOf("wood_classic", "piece_classic")) ?: emptySet()
-        val equipped = prefs.getString("equippedBoard", "wood_classic")
+        val equipped = prefs.getString("equippedBoard", "wood_classic") ?: "wood_classic"
+        
         for (it in items) {
             val v = LayoutInflater.from(this).inflate(R.layout.item_shop, container, false)
             v.findViewById<TextView>(R.id.itemName).text = it.name
             v.findViewById<TextView>(R.id.itemPrice).text = if (it.price == 0) "Gratis" else "Rp ${it.price}"
             val btn = v.findViewById<Button>(R.id.itemBtn)
+            
             btn.text = when {
                 equipped == it.id -> getString(R.string.owned)
                 owned.contains(it.id) -> getString(R.string.equip)
                 else -> getString(R.string.buy)
             }
+            
             btn.setOnClickListener {
                 if (equipped == it.id) return@setOnClickListener
                 if (owned.contains(it.id)) {
